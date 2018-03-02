@@ -55,7 +55,7 @@ Example configuration:
 
 Future work
 -----------
-Multiple OS support can be added if someone interested. Also more configuration options (actually all of them) can be added as role variables.
+Multiple OS support can be added if someone is interested. Also more configuration options (actually all of them) can be added as role variables.
 Other plans:
 * add TLS support with Let's Encrypt
 * create and setup user homes
