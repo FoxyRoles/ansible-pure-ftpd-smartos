@@ -1,0 +1,7 @@
+
+- name: reload pure-ftpd
+  service:
+    name: pure-ftpd
+    state: restarted
+    enabled: true
+

@@ -1,0 +1,13 @@
+{% for user in pureftpd_users %}
+{% set user_hash = hostvars[inventory_hostname]['ansible_local']['pureftpd']['pureftp_pwd_salts'][user] if hostvars[inventory_hostname]['ansible_local']['pureftpd']['pureftp_pwd_salts'][user] is defined else None %}
+{% set user_passwd = pureftpd_users[user]['passwd'] if pureftpd_users[user]['passwd'] is defined else lookup('password', [pureftpd_local_passdb, '/', inventory_hostname, '/', user, ' chars={{ pureftpd_pass_complexity }} length={{ pureftpd_pass_len }}']|join) %}
+{# start of user line definition #}
+{{ user
+}}:{{
+	user_passwd|password_hash('sha512', user_hash)
+}}:{{
+	pureftpd_users[user]['uid'] }}:{% if pureftpd_users[user]['gid'] is defined %}{{ pureftpd_users[user]['gid'] }}{% else %}{{ pureftpd_users[user]['uid'] }}{% endif
+%}::{%
+	if pureftpd_users[user]['dir'] is defined %}{{ pureftpd_users[user]['dir'] }}{% else %}{{ pureftpd_default_homes }}/{{ user }}{% endif %}{% if pureftpd_users[user]['chrooted'] is undefined or (pureftpd_users[user]['chrooted'] is defined and pureftpd_users[user]['chrooted'] == True) %}/.{% endif
+%}/::::::::::::
+{% endfor %}
