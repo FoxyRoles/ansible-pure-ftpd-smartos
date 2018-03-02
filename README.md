@@ -8,7 +8,7 @@ The role is fully idempotent.
 
 Configuration variables:
 ------------------------
-'''
+```
 pureftpd_local_passdb: "~/.ans_pureftpd_passdb"        # a directory on the ansible control machine which stores the generated pureftpd passwords
 pureftpd_pass_len: 10                                  # a length of generated passwords
 pureftpd_pass_complexity: 'ascii_letters,digits'       # possible values: ascii_letters,digits,hexdigits,punctuation
@@ -20,17 +20,17 @@ pureftpd_users:
     dir: /ftp/user1 # if not defined, defaults to {{pureftpd_default_homes}}/{{user_name}}
     chrooted: true  # optional, default true
     passwd: 'mypwd' # optional, otherwise generated automatically according to config rules
-'''
+```
 Password specified in `pureftpd_users` take precedense before auto-generated ones. Generated passwords are stored on *ansible master host* (yes, the one that executed the ansible command) in `pureftpd_local_passdb` directory using following pattern:
-'''
+```
 {{ pureftpd_local_passdb }}/{{ machine_inventory_name }}/{{ user_name }}
 Example:
 > cat /root/.ans_pureftpd_passdb/mysrv1/user22
-'''
+```
 
 Example configuration:
 ----------------------
-'''
+```
 - name: install pureftpd
   hosts: purehost
   gather_facts: True
@@ -51,7 +51,7 @@ Example configuration:
   pre_tasks:
   roles:
     - pure-ftpd
-'''
+```
 
 Future work
 -----------
