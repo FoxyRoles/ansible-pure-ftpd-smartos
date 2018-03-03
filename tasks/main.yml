@@ -8,4 +8,11 @@
   when: pureftpd_users[item]['uid'] is undefined
   with_items: "{{ pureftpd_users }}"
 
-- include: ftpd.yml
+- include: inst-smartos.yml
+  when: ansible_distribution == "SmartOS"
+
+- include: conf.yml
+
+- include: post-inst-smartos.yml
+  when: ansible_distribution == "SmartOS"
+

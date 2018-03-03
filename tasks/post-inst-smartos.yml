@@ -1,0 +1,25 @@
+---
+
+- name: "Create symlink to pure.passwd"
+  file:
+    src: "{{ pureftpd_etcdir }}/pure.passwd"
+    dest: "/opt/local/etc/pureftpd.passwd"
+    state: link
+
+- name: "Create symlink to pure.pdb"
+  file:
+    src: "/opt/local/etc/pureftpd.pdb"
+    dest: "{{ pureftpd_etcdir }}/pure.pdb"
+    state: link
+    force: yes
+
+- name: "check for SMF service presence (failure is ok)"
+  shell: svcs -Ho state network/pure-ftpd
+  register: smf_present
+  ignore_errors: true
+  changed_when: false
+
+- name: "import SMF file"
+  shell: svccfg import /opt/custom/smf/pure-ftpd-smf.xml
+  when: smf_present|failed
+

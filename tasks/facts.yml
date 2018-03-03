@@ -6,7 +6,7 @@
     state: "directory"
 
 - name: "Pure-FTPd fact file present"
-  copy:
+  template:
     src: pureftpd.fact
     dest: /etc/ansible/facts.d/pureftpd.fact
     mode: 0755

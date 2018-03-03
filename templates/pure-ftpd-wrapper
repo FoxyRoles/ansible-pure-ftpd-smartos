@@ -123,8 +123,8 @@ my %authconf = ('ExtAuth' => ['extauth:%s', \&parse_sockname],
 
 my @conffiles;
 
-opendir (ETCCONF, '/etc/pure-ftpd/conf') 
-	|| die "$0: Couldn't examine directory /etc/pure-ftpd/conf: $!\n";
+opendir (ETCCONF, '{{ pureftpd_etcdir }}/conf') 
+	|| die "$0: Couldn't examine directory {{ pureftpd_etcdir }}/conf: $!\n";
 @conffiles = readdir (ETCCONF);
 closedir (ETCCONF);
 
@@ -132,8 +132,8 @@ closedir (ETCCONF);
 
 my @authfiles;
 
-opendir (ETCAUTH, '/etc/pure-ftpd/auth') 
-	|| die "$0: Couldn't examine directory /etc/pure-ftpd/auth: $!\n";
+opendir (ETCAUTH, '{{ pureftpd_etcdir }}/auth') 
+	|| die "$0: Couldn't examine directory {{ pureftpd_etcdir }}/auth: $!\n";
 @authfiles = readdir (ETCAUTH);
 closedir (ETCAUTH);
 
@@ -141,9 +141,9 @@ my ($file, $cref, $name);
 my (@options, $option, $ret);
 
 for my $authname (@authfiles) {
-	$file = "/etc/pure-ftpd/auth/$authname";
+	$file = "{{ pureftpd_etcdir }}/auth/$authname";
 	unless (File::Spec->file_name_is_absolute($file)) {
-		$file = File::Spec->catfile('/etc/pure-ftpd/auth',$file);
+		$file = File::Spec->catfile('{{ pureftpd_etcdir }}/auth',$file);
 	}
 	next unless -f $file;
 	
@@ -167,7 +167,7 @@ for (@conffiles) {
 	# skip authentication configuration files
 	next if exists $authconf{$_};
 	
-	$file = "/etc/pure-ftpd/conf/$_";
+	$file = "{{ pureftpd_etcdir }}/conf/$_";
 	if ($ret = parse_file(\%conf, $file, $_)) {
 		push (@options, $ret);
 	}
@@ -389,7 +389,7 @@ pure-ftpd-wrapper
 =head1 DESCRIPTION
 
 B<pure-ftpd-wrapper> reads the configuration for the Pure-FTPd daemon
-from files in the directory F</etc/pure-ftpd/conf>. Each file in this
+from files in the directory F<{{ pureftpd_etcdir }}/conf>. Each file in this
 directory is related to a command line option. No more than one
 line with configuration values is allowed. Empty lines or lines
 starting with the comment character C<#> are discarded.
@@ -397,10 +397,10 @@ starting with the comment character C<#> are discarded.
 The Pure-FTPd daemon allows to use different authentication methods
 together. The authentication methods are tried in the order they are
 specified on the command line. In order to achieve the same flexibility
-with files in the F</etc/pure-ftpd> directory, B<pure-ftpd-wrapper>
-checks all valid symbolic links within the directory F</etc/pure-ftpd/auth>
+with files in the F<{{ pureftpd_etcdir }}> directory, B<pure-ftpd-wrapper>
+checks all valid symbolic links within the directory F<{{ pureftpd_etcdir }}/auth>
 in alphabetical order. E.g., a link in this directory pointing to
-F</etc/pure-ftpd/conf/PureDB> would enable authentication against
+F<{{ pureftpd_etcdir }}/conf/PureDB> would enable authentication against
 a PureDB database.
 
 There are no means to configure the I<PIDFile> setting, it is hardwired

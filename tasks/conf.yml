@@ -1,0 +1,41 @@
+---
+
+- name: "Auth directory present"
+  file:
+    path: "{{ pureftpd_etcdir }}/auth"
+    state: directory
+
+- name: "Config directory present"
+  file:
+    path: "{{ pureftpd_etcdir }}/conf"
+    state: directory
+
+- name: "Auth files present"
+  template:
+    src: "{{ item }}"
+    dest: "{{ pureftpd_etcdir }}/auth/"
+  with_fileglob:
+    - ../templates/auth/*
+  notify: reload pure-ftpd
+
+- name: "Config files present"
+  template:
+    src: "{{ item }}"
+    dest: "{{ pureftpd_etcdir }}/conf/"
+  with_fileglob:
+    - templates/conf/*
+  notify: reload pure-ftpd
+
+- name: "User file present"
+  template:
+    src: "pure.passwd.j2"
+    dest: "{{ pureftpd_etcdir }}/pure.passwd"
+    owner: root
+    mode: 0600
+  register: update_userfile
+  notify: reload pure-ftpd
+
+- name: "Update userdb"
+  command: /opt/local/bin/pure-pw mkdb /opt/local/etc/pureftpd.pdb -f {{ pureftpd_etcdir }}/pure.passwd
+  when: update_userfile|changed
+

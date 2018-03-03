@@ -6,7 +6,7 @@
   changed_when: "'nothing to do.' not in i.stdout"
 
 - name: "pure-ftpd-wrapper present"
-  copy:
+  template:
     src: pure-ftpd-wrapper
     dest: /opt/local/sbin/pure-ftpd-wrapper
     mode: 0755

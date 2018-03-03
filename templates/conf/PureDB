@@ -1,1 +1,1 @@
-/etc/pure-ftpd/pure.pdb
+{{ pureftpd_etcdir }}/pure.pdb

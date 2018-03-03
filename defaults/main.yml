@@ -3,3 +3,4 @@ pureftpd_pass_len: 10                                  # a length of generated p
 pureftpd_pass_complexity: 'ascii_letters,digits'       # possible values: ascii_letters,digits,hexdigits,punctuation
 pureftpd_default_homes: '/home'
 pureftpd_users:
+pureftpd_etcdir: '/etc/pure-ftpd'
