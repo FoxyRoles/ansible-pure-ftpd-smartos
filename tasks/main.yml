@@ -8,6 +8,25 @@
   when: pureftpd_users[item]['uid'] is undefined
   with_items: "{{ pureftpd_users }}"
 
+# define defaults
+- name: set pure.pdb path (default)
+  set_fact:
+    pdb_file: '{{ pureftpd_etcdir }}/pure.pdb'
+
+- name: set pure.pdb path (SmartOS)
+  set_fact:
+    pdb_file: '/opt/local/etc/pureftpd.pdb'
+  when: ansible_distribution == "SmartOS"
+
+- name: set pure-pw path (default)
+  set_fact:
+    pure_pw: 'pure-pw'
+
+- name: set pure-pw path (SmartOS)
+  set_fact:
+    pure_pw: '/opt/local/bin/pure-pw'
+  when: ansible_distribution == "SmartOS"
+
 - include: inst-smartos.yml
   when: ansible_distribution == "SmartOS"
 

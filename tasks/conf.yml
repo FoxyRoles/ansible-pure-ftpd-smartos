@@ -16,6 +16,16 @@
     dest: "{{ pureftpd_etcdir }}/auth/"
   with_fileglob:
     - ../templates/auth/*
+  when: (not pureftpd_auth_override) or
+        item|basename not in pureftpd_auth_override
+  notify: reload pure-ftpd
+
+- name: "Auth files overrides"
+  copy:
+    dest: "{{ pureftpd_etcdir }}/auth/{{ item }}"
+    content: '{{ pureftpd_auth_override[item] }}'
+  with_items: "{{ pureftpd_auth_override }}"
+  when: pureftpd_auth_override
   notify: reload pure-ftpd
 
 - name: "Config files present"
@@ -24,6 +34,16 @@
     dest: "{{ pureftpd_etcdir }}/conf/"
   with_fileglob:
     - templates/conf/*
+  when: (not pureftpd_conf_override) or
+        item|basename not in pureftpd_conf_override
+  notify: reload pure-ftpd
+
+- name: "Config files overrides"
+  copy:
+    dest: "{{ pureftpd_etcdir }}/conf/{{ item }}"
+    content: '{{ pureftpd_conf_override[item] }}'
+  with_items: "{{ pureftpd_conf_override }}"
+  when: pureftpd_conf_override
   notify: reload pure-ftpd
 
 - name: "User file present"
@@ -36,6 +56,6 @@
   notify: reload pure-ftpd
 
 - name: "Update userdb"
-  command: /opt/local/bin/pure-pw mkdb /opt/local/etc/pureftpd.pdb -f {{ pureftpd_etcdir }}/pure.passwd
+  command: "{{ pure_pw }} mkdb {{ pdb_file }} -f {{ pureftpd_etcdir }}/pure.passwd"
   when: update_userfile|changed
 

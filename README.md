@@ -4,7 +4,17 @@ pure-ftpd
 This is a role for installing an FTP server. It can automatically create users and generate passwords.
 Supported OS: SmartOS
 
-The role is fully idempotent.
+
+Features:
+---------
+- The role is fully idempotent
+- Fully modifiable pure-ftpd configuration settings
+- Customisable config dir path
+- Virtual users support
+- User passwords are generated automatically if necessary
+- Customisable generated passwords complexity
+- User removal is fully supported (just remove the user from `pureftpd_users`)
+- Nonexistent user homes are created after first login
 
 Configuration variables:
 ------------------------
@@ -13,6 +23,9 @@ pureftpd_local_passdb: "~/.ans_pureftpd_passdb"        # a directory on the ansi
 pureftpd_pass_len: 10                                  # a length of generated passwords
 pureftpd_pass_complexity: 'ascii_letters,digits'       # possible values: ascii_letters,digits,hexdigits,punctuation
 pureftpd_default_homes: '/home'
+pureftpd_etcdir: '/etc/pure-ftpd'
+pureftpd_conf_override:                                # configuration overrides (values must be enclosed in "" to prevent converting to True/False)
+pureftpd_auth_override:                                # if your settings get ignored, try to move them between conf/auth sections
 pureftpd_users:
   user1:
     uid: 1234       # mandatory
@@ -37,6 +50,11 @@ Example configuration:
   any_errors_fatal: True
   vars:
       pureftpd_default_homes: '/ftpdata'
+      pureftpd_conf_override:
+        CreateHomeDir: "no"
+      	IPV4Only: "no"
+      pureftpd_auth_override:
+      	PAMAuthentication: "yes"
       pureftpd_users:
           myuser:
               uid: 1122
@@ -55,7 +73,6 @@ Example configuration:
 
 Future work
 -----------
-Multiple OS support can be added if someone is interested. Also more configuration options (actually all of them) can be added as role variables.
+Multiple OS support can be added if someone is interested.
 Other plans:
 * add TLS support with Let's Encrypt
-* create and setup user homes

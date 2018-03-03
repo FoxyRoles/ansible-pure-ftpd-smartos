@@ -8,7 +8,7 @@
 
 - name: "Create symlink to pure.pdb"
   file:
-    src: "/opt/local/etc/pureftpd.pdb"
+    src: "{{ pdb_file }}"
     dest: "{{ pureftpd_etcdir }}/pure.pdb"
     state: link
     force: yes
