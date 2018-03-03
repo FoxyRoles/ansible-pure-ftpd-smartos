@@ -1,0 +1,24 @@
+---
+
+- name: "Install PureFTPd package"
+  command: pkgin -y install pure-ftpd
+  register: i
+  changed_when: "'nothing to do.' not in i.stdout"
+
+- name: "pure-ftpd-wrapper present"
+  copy:
+    src: pure-ftpd-wrapper
+    dest: /opt/local/sbin/pure-ftpd-wrapper
+    mode: 0755
+  notify: reload pure-ftpd
+
+- name: "create custom SMF directory"
+  file:
+    state: directory
+    dest: /opt/custom/smf
+
+- name: "SMF config present"
+  copy:
+    src: pure-ftpd-smf.xml
+    dest: /opt/custom/smf/pure-ftpd-smf.xml
+

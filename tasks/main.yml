@@ -1,6 +1,8 @@
 ---
 - include: facts.yml
 
+#- debug: msg='{{ hostvars }}'
+
 - name: check if user UIDs are correctly specified
   fail: msg='ERROR user "{{ item }}" does not have UID defined'
   when: pureftpd_users[item]['uid'] is undefined
