@@ -62,3 +62,10 @@
   command: "{{ pure_pw }} mkdb {{ pdb_file }} -f {{ pureftpd_etcdir }}/pure.passwd"
   when: update_userfile|changed
 
+- name: "Link TLS certificate"
+  file:
+    dest: "{{ pure_certfile }}"
+    src: "{{ pureftpd_ssl_certfile }}"
+    state: link
+  when: pureftpd_ssl_certfile is defined
+  notify: reload pure-ftpd

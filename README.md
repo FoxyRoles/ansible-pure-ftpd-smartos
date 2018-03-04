@@ -15,6 +15,7 @@ Features:
 - Customisable generated passwords complexity
 - User removal is fully supported (just remove the user from `pureftpd_users`)
 - Nonexistent user homes are created after first login
+- TLS support
 
 Configuration variables:
 ------------------------
@@ -25,6 +26,7 @@ pureftpd_pass_complexity: 'ascii_letters,digits'       # possible values: ascii_
 pureftpd_default_homes: '/home'
 pureftpd_etcdir: '/etc/pure-ftpd'
 pureftpd_confvars:                                     # configuration overrides (values must be enclosed in "" to prevent converting to True/False)
+pureftpd_ssl_certfile: ...                             # SSL certificate to use when TLS is enabled (file must contain KEY and CERT in PEM format)
 pureftpd_users:
   user1:
     uid: 1234       # mandatory
@@ -49,7 +51,9 @@ Example configuration:
   any_errors_fatal: True
   vars:
       pureftpd_default_homes: '/ftpdata'
+	  pureftpd_ssl_certfile: '/etc/openssl/mycert-combined.pem'
       pureftpd_confvars:
+	    TLS: 2		# '0' to disable TLS; '1' to make TLS optional; '2' to require TLS
         CreateHomeDir: "no"
       	IPV4Only: "no"
       	PAMAuthentication: "yes"
@@ -72,5 +76,3 @@ Example configuration:
 Future work
 -----------
 Multiple OS support can be added if someone is interested.
-Other plans:
-* add TLS support with Let's Encrypt

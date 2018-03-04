@@ -27,6 +27,25 @@
     pure_pw: '/opt/local/bin/pure-pw'
   when: ansible_distribution == "SmartOS"
 
+- name: set OS-specific TLS cert path (default)
+  set_fact:
+    pure_certfile: '/etc/openssl/private/pure-ftpd.pem'
+
+- name: set OS-specific TLS cert path (SmartOS)
+  set_fact:
+    pure_certfile: '/opt/local/etc/openssl/private/pure-ftpd.pem'
+  when: ansible_distribution == "SmartOS"
+
+- name: check for TLS certfile
+  stat: path='{{ pureftpd_ssl_certfile }}'
+  register: tlsfile
+  when: pureftpd_ssl_certfile is defined
+
+- name: fail if TLS certfile is required and not present
+  fail: msg="SSL certificate {{ pureftpd_ssl_certfile }} does not exist!"
+  when: pureftpd_ssl_certfile is defined and not tlsfile.stat.exists
+
+
 # Pure-FTPd from version 1.0.44 can directly use config files 
 # and does not require wrappers anymore.
 # Unfortunately, this version is not yet bundled 
