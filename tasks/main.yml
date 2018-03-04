@@ -27,6 +27,14 @@
     pure_pw: '/opt/local/bin/pure-pw'
   when: ansible_distribution == "SmartOS"
 
+# Pure-FTPd from version 1.0.44 can directly use config files 
+# and does not require wrappers anymore.
+# Unfortunately, this version is not yet bundled 
+# in SmartOS nor CentOS 7.
+- name: determine config type
+  set_fact:
+    use_confdir: True
+
 - include: inst-smartos.yml
   when: ansible_distribution == "SmartOS"
 

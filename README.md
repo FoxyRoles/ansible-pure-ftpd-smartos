@@ -24,8 +24,7 @@ pureftpd_pass_len: 10                                  # a length of generated p
 pureftpd_pass_complexity: 'ascii_letters,digits'       # possible values: ascii_letters,digits,hexdigits,punctuation
 pureftpd_default_homes: '/home'
 pureftpd_etcdir: '/etc/pure-ftpd'
-pureftpd_conf_override:                                # configuration overrides (values must be enclosed in "" to prevent converting to True/False)
-pureftpd_auth_override:                                # if your settings get ignored, try to move them between conf/auth sections
+pureftpd_confvars:                                     # configuration overrides (values must be enclosed in "" to prevent converting to True/False)
 pureftpd_users:
   user1:
     uid: 1234       # mandatory
@@ -50,10 +49,9 @@ Example configuration:
   any_errors_fatal: True
   vars:
       pureftpd_default_homes: '/ftpdata'
-      pureftpd_conf_override:
+      pureftpd_confvars:
         CreateHomeDir: "no"
       	IPV4Only: "no"
-      pureftpd_auth_override:
       	PAMAuthentication: "yes"
       pureftpd_users:
           myuser:

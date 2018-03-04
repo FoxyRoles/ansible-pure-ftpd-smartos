@@ -4,5 +4,21 @@ pureftpd_pass_complexity: 'ascii_letters,digits'       # possible values: ascii_
 pureftpd_default_homes: '/home'
 pureftpd_users:
 pureftpd_etcdir: '/etc/pure-ftpd-custom'
-pureftpd_conf_override:                                # configuration overrides (values must be enclosed in "" to prevent converting to True/False)
-pureftpd_auth_override:
+pureftpd_confdefaults:                                 # configuration overrides (values must be enclosed in "" to prevent converting to True/False)
+    PAMAuthentication:  "no"
+    UnixAuthentication: "no"
+    AltLog:             "clf:/var/log/pure-ftpd-transfer.log"
+    ChrootEveryone:     "yes"
+    CreateHomeDir:      "yes"
+    DisplayDotFiles:    "yes"
+    DontResolve:        "1"
+    FSCharset:          "UTF-8"
+    IPV4Only:           "yes"
+    LimitRecursion:     "2000 8"
+    MinUID:             "1000"
+    NoAnonymous:        "yes"
+    NoTruncate:         "yes"
+    PureDB:             "{{ pureftpd_etcdir }}/pure.pdb"
+    VerboseLog:         "yes"
+pureftpd_confvars: {}
+
