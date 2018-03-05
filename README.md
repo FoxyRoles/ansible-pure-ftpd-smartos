@@ -51,12 +51,12 @@ Example configuration:
   any_errors_fatal: True
   vars:
       pureftpd_default_homes: '/ftpdata'
-	  pureftpd_ssl_certfile: '/etc/openssl/mycert-combined.pem'
+      pureftpd_ssl_certfile: '/etc/openssl/mycert-combined.pem'
       pureftpd_confvars:
-	    TLS: 2		# '0' to disable TLS; '1' to make TLS optional; '2' to require TLS
+        TLS: 2        # '0' to disable TLS; '1' to make TLS optional; '2' to require TLS
         CreateHomeDir: "no"
-      	IPV4Only: "no"
-      	PAMAuthentication: "yes"
+        IPV4Only: "no"
+        PAMAuthentication: "yes"
       pureftpd_users:
           myuser:
               uid: 1122

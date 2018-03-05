@@ -3,12 +3,11 @@
 
 #- debug: msg='{{ hostvars }}'
 
-- name: check if user UIDs are correctly specified
+- name: fail if user uids not defined
   fail: msg='ERROR user "{{ item }}" does not have UID defined'
   when: pureftpd_users[item]['uid'] is undefined
   with_items: "{{ pureftpd_users }}"
 
-# define defaults
 - name: set pure.pdb path (default)
   set_fact:
     pdb_file: '{{ pureftpd_etcdir }}/pure.pdb'

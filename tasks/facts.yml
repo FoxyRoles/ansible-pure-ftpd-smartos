@@ -10,6 +10,8 @@
     src: pureftpd.fact
     dest: /etc/ansible/facts.d/pureftpd.fact
     mode: 0755
+  register: push_fact_script
 
 - name: "Re-run setup to use custom facts"
   setup: ~
+  when: push_fact_script|changed
