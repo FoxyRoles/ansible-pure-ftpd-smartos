@@ -1,10 +1,11 @@
 {% for user in pureftpd_users %}
-{% set user_hash = hostvars[inventory_hostname]['ansible_local']['pureftpd']['pureftp_pwd_salts'][user] if hostvars[inventory_hostname]['ansible_local']['pureftpd']['pureftp_pwd_salts'][user] is defined else None %}
-{% set user_passwd = pureftpd_users[user]['passwd'] if pureftpd_users[user]['passwd'] is defined else lookup('password', [pureftpd_local_passdb, '/', inventory_hostname, '/', user, ' chars={{ pureftpd_pass_complexity }} length={{ pureftpd_pass_len }}']|join) %}
+{% set user_passwd = pureftpd_users[user]['passwd'] if pureftpd_users[user]['passwd'] is defined else lookup('ansible.builtin.password', pureftpd_local_passdb ~ '/' ~ inventory_hostname ~ '/' ~ user, chars=pureftpd_pass_complexity, length=pureftpd_pass_len) %}
+{# Persist the input salt because libcrypt can encode it differently in the resulting hash. #}
+{% set user_salt = lookup('ansible.builtin.password', pureftpd_local_passdb ~ '/.salts/' ~ inventory_hostname ~ '/' ~ user, length=16, chars=['ascii_letters', 'digits', './']) %}
 {# start of user line definition #}
 {{ user
 }}:{{
-	user_passwd|password_hash('sha512', user_hash)
+	user_passwd|password_hash('sha512', user_salt)
 }}:{{
 	pureftpd_users[user]['uid'] }}:{% if pureftpd_users[user]['gid'] is defined %}{{ pureftpd_users[user]['gid'] }}{% else %}{{ pureftpd_users[user]['uid'] }}{% endif
 %}::{%

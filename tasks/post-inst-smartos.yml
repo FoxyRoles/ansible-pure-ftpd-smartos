@@ -21,5 +21,5 @@
 
 - name: "import SMF file"
   shell: svccfg import /opt/custom/smf/pure-ftpd-smf.xml
-  when: smf_present|failed
+  when: smf_present is failed
 

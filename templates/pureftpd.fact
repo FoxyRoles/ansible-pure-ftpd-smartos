@@ -16,7 +16,7 @@ if [[ -f "{{ pureftpd_etcdir }}/pure.passwd" ]]; then
 		echo ","
 	fi
 	echo $line
-	done <<< "$(cat {{ pureftpd_etcdir }}/pure.passwd | awk -F':' '{gsub(/\$[^$]+$/, "", $2); gsub(/^\$[^$]+\$/, "", $2); print "\""$1"\": \""$2"\""}')"
+	done <<< "$(cat {{ pureftpd_etcdir }}/pure.passwd | awk -F':' '{gsub(/\$[^$]+$/, "", $2); gsub(/^\$[^$]+\$(rounds=[0-9]+\$)?/, "", $2); print "\""$1"\": \""$2"\""}')"
 fi
 
 echo '}}'

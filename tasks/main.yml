@@ -1,12 +1,13 @@
 ---
-- include: facts.yml
+- ansible.builtin.import_tasks: facts.yml
 
 #- debug: msg='{{ hostvars }}'
 
 - name: fail if user uids not defined
-  fail: msg='ERROR user "{{ item }}" does not have UID defined'
-  when: pureftpd_users[item]['uid'] is undefined
-  with_items: "{{ pureftpd_users }}"
+  ansible.builtin.fail:
+    msg: 'ERROR user "{{ item }}" does not have UID defined'
+  when: pureftpd_users[item].uid is undefined
+  loop: "{{ pureftpd_users.keys() | list }}"
 
 - name: set pure.pdb path (default)
   set_fact:
@@ -15,7 +16,7 @@
 - name: set pure.pdb path (SmartOS)
   set_fact:
     pdb_file: '/opt/local/etc/pureftpd.pdb'
-  when: ansible_distribution == "SmartOS"
+  when: ansible_facts['distribution'] == 'SmartOS'
 
 - name: set pure-pw path (default)
   set_fact:
@@ -24,7 +25,7 @@
 - name: set pure-pw path (SmartOS)
   set_fact:
     pure_pw: '/opt/local/bin/pure-pw'
-  when: ansible_distribution == "SmartOS"
+  when: ansible_facts['distribution'] == 'SmartOS'
 
 - name: set OS-specific TLS cert path (default)
   set_fact:
@@ -33,7 +34,7 @@
 - name: set OS-specific TLS cert path (SmartOS)
   set_fact:
     pure_certfile: '/opt/local/etc/openssl/private/pure-ftpd.pem'
-  when: ansible_distribution == "SmartOS"
+  when: ansible_facts['distribution'] == 'SmartOS'
 
 - name: check for TLS certfile
   stat: path='{{ pureftpd_ssl_certfile }}'
@@ -53,11 +54,11 @@
   set_fact:
     use_confdir: True
 
-- include: inst-smartos.yml
-  when: ansible_distribution == "SmartOS"
+- ansible.builtin.include_tasks: inst-smartos.yml
+  when: ansible_facts['distribution'] == 'SmartOS'
 
-- include: conf.yml
+- ansible.builtin.import_tasks: conf.yml
 
-- include: post-inst-smartos.yml
-  when: ansible_distribution == "SmartOS"
+- ansible.builtin.include_tasks: post-inst-smartos.yml
+  when: ansible_facts['distribution'] == 'SmartOS'
 

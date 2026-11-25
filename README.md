@@ -42,6 +42,9 @@ Example:
 > cat /root/.ans_pureftpd_passdb/mysrv1/user22
 ```
 
+The controller stores per-user hash salts under `.salts/` in the same passdb.
+The first run with this version rehashes existing passwords with those salts.
+
 Example configuration:
 ----------------------
 ```

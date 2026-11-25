@@ -21,7 +21,7 @@
   copy:
     dest: "{{ pureftpd_etcdir }}/{% if item|lower in ['ldapconfigfile', 'mysqlconfigfile', 'pgsqlconfigfile', 'pamauthentication', 'puredb', 'unixauthentication'] %}auth{%else%}conf{% endif %}/{{ item }}"
     content: '{{ pureftpd_confdefaults[item] }}'
-  with_items: "{{ pureftpd_confdefaults|difference(pureftpd_confvars) }}"
+  loop: "{{ pureftpd_confdefaults.keys() | list | difference(pureftpd_confvars.keys() | list) }}"
   when: use_confdir
   notify: reload pure-ftpd
 
@@ -29,8 +29,8 @@
   copy:
     dest: "{{ pureftpd_etcdir }}/{% if item|lower in ['ldapconfigfile', 'mysqlconfigfile', 'pgsqlconfigfile', 'pamauthentication', 'puredb', 'unixauthentication'] %}auth{%else%}conf{% endif %}/{{ item }}"
     content: '{{ pureftpd_confvars[item] }}'
-  with_items: "{{ pureftpd_confvars }}"
-  when: use_confdir and pureftpd_confvars
+  loop: "{{ pureftpd_confvars.keys() | list }}"
+  when: use_confdir
   notify: reload pure-ftpd
 
 - name: "Create pure-ftpd.conf"
@@ -43,7 +43,7 @@
         {% for key in pureftpd_confvars %}
         {{ key }}	{{ pureftpd_confvars[key] }}
         {% endfor %}
-        {% for key in pureftpd_confdefaults|difference(pureftpd_confvars) %}
+        {% for key in pureftpd_confdefaults.keys() | list | difference(pureftpd_confvars.keys() | list) %}
         {{ key }}	{{ pureftpd_confdefaults[key] }}
         {% endfor %}
   when: not use_confdir
@@ -60,7 +60,7 @@
 
 - name: "Update userdb"
   command: "{{ pure_pw }} mkdb {{ pdb_file }} -f {{ pureftpd_etcdir }}/pure.passwd"
-  when: update_userfile|changed
+  when: update_userfile is changed
 
 - name: "Link TLS certificate"
   file:

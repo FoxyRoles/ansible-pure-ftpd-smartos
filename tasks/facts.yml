@@ -14,4 +14,4 @@
 
 - name: "Re-run setup to use custom facts"
   setup: ~
-  when: push_fact_script|changed
+  when: push_fact_script is changed

@@ -1,9 +1,9 @@
 ---
 
 - name: "Install PureFTPd package"
-  command: pkgin -y install pure-ftpd
-  register: i
-  changed_when: "'nothing to do.' not in i.stdout"
+  community.general.pkgin:
+    name: pure-ftpd
+    state: present
 
 - name: "pure-ftpd-wrapper present"
   template:
