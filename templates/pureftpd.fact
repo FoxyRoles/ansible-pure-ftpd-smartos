@@ -1,4 +1,5 @@
 #!/bin/bash
+{{ ansible_managed | default('Ansible managed') | comment(prefix='', postfix='') | trim }}
 
 # Extract salts from already generated hashes.
 

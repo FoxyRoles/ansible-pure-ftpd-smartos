@@ -1,6 +1,6 @@
 
 - name: reload pure-ftpd
-  service:
+  ansible.builtin.service:
     name: pure-ftpd
     state: restarted
     enabled: true

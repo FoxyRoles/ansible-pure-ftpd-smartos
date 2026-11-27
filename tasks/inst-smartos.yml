@@ -6,19 +6,19 @@
     state: present
 
 - name: "pure-ftpd-wrapper present"
-  template:
+  ansible.builtin.template:
     src: pure-ftpd-wrapper
     dest: /opt/local/sbin/pure-ftpd-wrapper
     mode: 0755
   notify: reload pure-ftpd
 
 - name: "create custom SMF directory"
-  file:
+  ansible.builtin.file:
     state: directory
     dest: /opt/custom/smf
 
 - name: "SMF config present"
-  copy:
+  ansible.builtin.copy:
     src: pure-ftpd-smf.xml
     dest: /opt/custom/smf/pure-ftpd-smf.xml
 

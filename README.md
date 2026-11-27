@@ -4,6 +4,12 @@ pure-ftpd
 This is a role for installing an FTP server. It can automatically create users and generate passwords.
 Supported OS: SmartOS
 
+## Requirements
+
+- `ansible-core` 2.19 or newer.
+- The `community.general` collection.
+- The `passlib` Python package on the controller for password hashing with
+  `ansible-core` 2.19 or 2.20.
 
 Features:
 ---------
@@ -47,33 +53,32 @@ The first run with this version rehashes existing passwords with those salts.
 
 Example configuration:
 ----------------------
-```
+```yaml
 - name: install pureftpd
   hosts: purehost
-  gather_facts: True
-  any_errors_fatal: True
+  gather_facts: true
+  any_errors_fatal: true
   vars:
-      pureftpd_default_homes: '/ftpdata'
-      pureftpd_ssl_certfile: '/etc/openssl/mycert-combined.pem'
-      pureftpd_confvars:
-        TLS: 2        # '0' to disable TLS; '1' to make TLS optional; '2' to require TLS
-        CreateHomeDir: "no"
-        IPV4Only: "no"
-        PAMAuthentication: "yes"
-      pureftpd_users:
-          myuser:
-              uid: 1122
-              chrooted: false
-              passwd: 'aaa'
-          youruser:
-              uid: 1123
-              gid: 2222
-              dir: /tmp
-          simpleuser:
-              uid: 2000
-  pre_tasks:
+    pureftpd_default_homes: '/ftpdata'
+    pureftpd_ssl_certfile: '/etc/openssl/mycert-combined.pem'
+    pureftpd_confvars:
+      TLS: '2'        # '0' to disable TLS; '1' to make TLS optional; '2' to require TLS
+      CreateHomeDir: 'no'
+      IPV4Only: 'no'
+      PAMAuthentication: 'yes'
+    pureftpd_users:
+      myuser:
+        uid: 1122
+        chrooted: false
+        passwd: 'aaa'
+      youruser:
+        uid: 1123
+        gid: 2222
+        dir: /tmp
+      simpleuser:
+        uid: 2000
   roles:
-    - pure-ftpd
+    - role: sunfoxcz.smartos-pureftpd
 ```
 
 Future work

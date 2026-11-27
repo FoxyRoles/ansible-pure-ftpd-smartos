@@ -10,39 +10,41 @@
   loop: "{{ pureftpd_users.keys() | list }}"
 
 - name: set pure.pdb path (default)
-  set_fact:
+  ansible.builtin.set_fact:
     pdb_file: '{{ pureftpd_etcdir }}/pure.pdb'
 
 - name: set pure.pdb path (SmartOS)
-  set_fact:
+  ansible.builtin.set_fact:
     pdb_file: '/opt/local/etc/pureftpd.pdb'
   when: ansible_facts['distribution'] == 'SmartOS'
 
 - name: set pure-pw path (default)
-  set_fact:
+  ansible.builtin.set_fact:
     pure_pw: 'pure-pw'
 
 - name: set pure-pw path (SmartOS)
-  set_fact:
+  ansible.builtin.set_fact:
     pure_pw: '/opt/local/bin/pure-pw'
   when: ansible_facts['distribution'] == 'SmartOS'
 
 - name: set OS-specific TLS cert path (default)
-  set_fact:
+  ansible.builtin.set_fact:
     pure_certfile: '/etc/openssl/private/pure-ftpd.pem'
 
 - name: set OS-specific TLS cert path (SmartOS)
-  set_fact:
+  ansible.builtin.set_fact:
     pure_certfile: '/opt/local/etc/openssl/private/pure-ftpd.pem'
   when: ansible_facts['distribution'] == 'SmartOS'
 
 - name: check for TLS certfile
-  stat: path='{{ pureftpd_ssl_certfile }}'
+  ansible.builtin.stat:
+    path: "{{ pureftpd_ssl_certfile }}"
   register: tlsfile
   when: pureftpd_ssl_certfile is defined
 
 - name: fail if TLS certfile is required and not present
-  fail: msg="SSL certificate {{ pureftpd_ssl_certfile }} does not exist!"
+  ansible.builtin.fail:
+    msg: "SSL certificate {{ pureftpd_ssl_certfile }} does not exist!"
   when: pureftpd_ssl_certfile is defined and not tlsfile.stat.exists
 
 
@@ -51,7 +53,7 @@
 # Unfortunately, this version is not yet bundled 
 # in SmartOS nor CentOS 7.
 - name: determine config type
-  set_fact:
+  ansible.builtin.set_fact:
     use_confdir: True
 
 - ansible.builtin.include_tasks: inst-smartos.yml
